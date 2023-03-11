@@ -21,8 +21,14 @@ router.get("/:city", function (req, res) {
 router.get("/", function (req, res) {
   const openWeatherAPIServiceInstance = new OpenWeatherAPIService();
   openWeatherAPIServiceInstance
-    .getCachedWeather(req.query.max)
+    .getCachedWeather(req.query.max ? req.query.max : 5)
     .then((weather) => {
+      if (typeof weather === "string") {
+        res
+          .status(400)
+          .send("400 Bad request " + req.query.max + " is not a valid amount");
+        return;
+      }
       let cityList = [];
       for (const [key, city] of Object.entries(weather)) {
         cityList.push({
@@ -35,7 +41,9 @@ router.get("/", function (req, res) {
     })
     .catch((err) => {
       console.log(err);
-      res.status(404).send("404 Not found");
+      res
+        .status(400)
+        .send("400 Bad request " + req.query.max + " is not a valid amount");
     });
 });
 

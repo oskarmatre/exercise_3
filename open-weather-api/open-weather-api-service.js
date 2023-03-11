@@ -30,6 +30,9 @@ class OpenWeatherAPIService {
   }
 
   async getCachedWeather(ammount) {
+    if (ammount < 1) {
+      return "Invalid ammount";
+    }
     const cachedWeather = [];
     let i = 0;
     let cities = myCache.keys();
