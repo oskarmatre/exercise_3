@@ -8,12 +8,13 @@ router.get("/:city", function (req, res) {
     .getWeather(req.params.city)
     .then((weather) => {
       res.send({
-        weatherDescription: weather.weather[0].description,
-        temperature: Math.round(weather.main.temp_min - 273.15),
         cityName: weather.name,
+        temperature: Math.round(weather.main.temp_min - 273.15),
+        weatherDescription: weather.weather[0].description,
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(404).send("404 Not found");
     });
 });
@@ -32,9 +33,9 @@ router.get("/", function (req, res) {
       let cityList = [];
       for (const [key, city] of Object.entries(weather)) {
         cityList.push({
-          weatherDescription: city.weather[0].description,
-          temperature: Math.round(city.main.temp_min - 273.15),
           cityName: city.name,
+          temperature: Math.round(city.main.temp_min - 273.15),
+          weatherDescription: city.weather[0].description,
         });
       }
       res.send(cityList);
