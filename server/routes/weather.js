@@ -14,7 +14,6 @@ router.get("/:city", function (req, res) {
       });
     })
     .catch((err) => {
-      console.log(err);
       res.status(404).send("404 Not found");
     });
 });
@@ -40,11 +39,10 @@ router.get("/", function (req, res) {
       }
       res.send(cityList);
     })
-    .catch((err) => {
-      console.log(err);
-      res
-        .status(400)
-        .send("400 Bad request " + req.query.max + " is not a valid amount");
+    .catch((err) => 
+    {
+      const status = err.status ? err.status : 500;
+      res.status(status).send("Error " + err.status + " " + err.statusText);
     });
 });
 
