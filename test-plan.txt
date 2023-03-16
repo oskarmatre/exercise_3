@@ -1,1 +1,65 @@
-Add step 4 text here
+4 a):
+
+weather-buddy-api.spec.js:
+We used “jest --coverage” to look at the statement and branch coverage. By doing this we found out that the tests included in the task did not cover all cases. Both 		branch coverage and statement coverage, at 75 and 68.42% respectively were not good enough by our standards. In step 3, we prioritized improving upon this. 
+	
+
+12-test.spec.js
+The purpose of the ‘12-test.spec.js’ file was to create tests to validate all other requirements that are not mentioned in ‘tests/weather-buddy-api.spec.js’. To find 	the other requirements to validate, the group read through the project description in the README.md file and mapped out our findings. All three of the following requirements are copied and pasted in from the project description and are what we consider the requirements:
+
+The tests in ‘weather-buddy-api.spec.js’ do not validate the throwing of error messages and always tests for ‘200’ OK. Therefore, two requirements from the project description stood out:
+If the data is not available from the Open Weather API for the given city, throw a ‘404’ Not Found error.
+If max is < 1, throw a ‘400’ Bad Request error.
+
+Another requirement to validate was found after searching through what hasn't been tested in ‘weather-buddy-api.spec.js’. One test in ‘weather-buddy-api.spec.js’ does retrieve all the elements in the cache, but not with a set max. Therefore our last test was:
+If max is greater than the number of entries currently in the cache, return all entries. 
+
+After implementing the three new integration tests, the “jest --coverage” showed that both the statement coverage and branch coverage has improved a lot. The branch coverage is now 100% across the board, and the statement coverage is mostly 100%, but has a lower score on weather.js with 89.47%.
+
+On line 44-45 in weather.js, there is a ‘catch(err)’ which is not tested. This is an edge-case scenario where the code will catch any other errors than the one specified in the task description and result in an ‘500’ Internal server error. This is not an important part of the functionality and we therefore agreed that it was ok to omit it from the tests. 
+
+
+4 b):
+
+Black-box:
+
+1. Random testing
+Random testing is a technique in which random inputs are provided to the system under test. The primary goal of this technique is to uncover unexpected behavior in the software by testing it with a large number of random input values.The tester generates a set of random input values and feeds them into the system to observe its behavior. The tester then analyzes the results to determine if the system behaves as expected or if it has any issues or bugs.
+Random testing is a simple and effective way to find issues in a system. However, it does not guarantee that all possible errors will be found. To increase the chances of finding issues, testers can run the test multiple times with different sets of random input values. The testing strategy can be useful when used in combination with other testing methods to improve the quality of software.
+With our program this technique could be useful in testing a large variety of city-name inputs, to test how it handles many different city names, correct and wrong, as well as string inputs which include characters that should be illegal and may cause unintended errors.
+
+2. Equivalence partitioning:
+The Equivalence partitioning technique divides the input domains into subdomains called "equivalence classes" based on inputs that should behave similarly, reducing the number of test cases required. Each equivalence class is tested with a representative sample from the subdomain, allowing for efficient and effective testing.
+In the program the input is in the form of GET requests to the server, which has two endpoints, dividing the domain into two main subdomains. Within the /weather/?max=<max-number> subdomain, the input can be split into the following equivalence classes: 
+		1 <= max <= 5
+		max < 1
+		5 < max
+		max is unspecified
+Within the /weather/:cityname input domain, the received input is a string, but the subdomains will only need to be partitioned into whether the string equates to a city name within the APIs database, which creates the following equivalence classes:
+		cityname ∈ cities
+		cityname ∉ cities
+
+3. Boundary values
+The boundary value testing technique focuses on testing the boundaries of data domains in order to ensure that the application handles values that are at or near the edge of the domain correctly. The technique is based on the principle that errors in software are more likely to occur at the boundaries of input values rather than in the middle of the range. The boundaries include the minimum and maximum input values as well as values just above or below these limits. For example, if a program accepts values between 1 and 100, boundary value testing would involve testing values of 1, 100, 2, 99, and any other values that are close to the limits of the input range. The boundary values technique works as an extension and refinement of the equivalence partitioning technique, and they are often used together. 
+In the case of our program, the only input domain’s boundaries we need to think about is that of the max variable. With the previously mentioned equivalence classes, this would mean we could test the max-values: 0, 1, 2, 4, 5, 7.
+
+
+White-box:
+
+1. Statement coverage
+In this technique, the control flow of the program is traced by the testing process to ensure that each statement in the code is executed at least once during the testing process. The main goal of this technique is to ensure that all executable statements in the code are exercised and that there are no dead code or unreachable statements. Statement coverage involves creating test cases that execute each line of code at least once. For instance, if a program has 100 lines of code, then statement coverage would ensure that each of those 100 lines of code is executed by at least one test case. 
+
+
+2. Data flow and all du-paths
+Data flow testing is a whitebox testing technique that involves identifying and testing the flow of data within a software system. This type of testing is used to ensure that data is being processed correctly throughout the system and that potential errors or vulnerabilities are identified. One approach to data flow testing is the All du-paths method, which involves testing all possible paths through a program that satisfies certain criteria, known as du-paths. A du-path is a path that covers every definition and use of a variable within the program. By testing all du-paths, developers can ensure that every possible combination of data flow has been tested, allowing for a more comprehensive and effective testing process. This approach can be particularly useful for identifying and resolving complex errors that may not be caught through other testing techniques.
+
+
+3. Decision coverage
+Decision coverage is a white-box testing technique used to measure the extent to which the control flow of a software program is tested. This technique focuses on testing the decision points in a program's source code, such as if-else statements, switch statements, and loops, to ensure that all possible outcomes of the decision points are exercised.
+The goal of decision coverage testing is to ensure that each decision point in the code is evaluated to both "true" and "false" at least once during the testing process. This helps to identify any logical errors in the program's control flow, and ensures that all branches of the code are executed.
+To achieve decision coverage, test cases are designed to exercise all possible outcomes of each decision point. For example, if a program has an if-else statement with two possible outcomes, test cases are designed to cover both the "true" and "false" paths through the statement. An example would be in the weather.js file when returning the get “/:city” you would have to test with both a valid and invalid city parameter to test all the code. 
+
+
+
+
+
